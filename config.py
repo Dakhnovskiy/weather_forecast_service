@@ -3,6 +3,7 @@ import os
 
 class Config(object):
     DEBUG = False
+    JSON_AS_ASCII = False
 
     MAX_COUNT_DAYS_FOR_FORECAST = 5
 
