@@ -5,6 +5,7 @@ from flask.views import View
 import datetime
 
 from openweathermap import get_weather_forecast, parse_response
+from validators import WeatherForecastSchema
 
 
 class WeatherForecastServiceView(View):
@@ -19,8 +20,14 @@ class WeatherForecastServiceView(View):
         api_key = current_app.config['API_KEY']
         api_function_weather_forecast = current_app.config['API_FUNCTION_WEATHER_FORECAST']
 
-        city = request.args.get('city')
-        count_days_for_forecast = int(request.args.get('count_days', 1))
+        args, errors = WeatherForecastSchema().load(request.args)
+        if errors:
+            response = jsonify(errors)
+            response.status_code = 400
+            return response
+
+        city = args['city']
+        count_days_for_forecast = args['count_days']
 
         country = 'RU'
         count_days = min(max_count_days_for_forecast, count_days_for_forecast)
