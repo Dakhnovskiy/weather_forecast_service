@@ -1,3 +1,4 @@
 Flask==0.12.2
+Flask-Limiter==1.0.1
 marshmallow==2.15.0
 requests==2.18.4
