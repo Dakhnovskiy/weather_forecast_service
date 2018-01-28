@@ -19,15 +19,17 @@ def get_description_weather_by_response_row(response_row):
     )
 
 
-def parse_response(response, max_date):
+def parse_response(response_data, max_date):
     """
     Парсинг ответа сервиса
-    :param response: ответ сервиса (словарь)
+    :param response_data: ответ сервиса (словарь)
     :param max_date: дата до которой необходимо отфильтровать данные
     :return: описание погоды
     """
+    response_not_found_msg = 'К сожалению, по вашему запросу данных не найдено'
+
     weather_description_list = []
-    for row in response_adapter(response, max_date):
+    for row in response_adapter(response_data, max_date):
         weather_description_list.append(get_description_weather_by_response_row(row))
 
-    return '\n\n'.join(weather_description_list)
+    return '\n\n'.join(weather_description_list) or response_not_found_msg
