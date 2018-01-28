@@ -16,7 +16,7 @@ limiter = Limiter(
 )
 
 app.add_url_rule(
-    'v1/forecast/',
+    '/v1/forecast/',
     view_func=WeatherForecastServiceView.as_view('weather_forecast'),
     methods=['GET']
 )
