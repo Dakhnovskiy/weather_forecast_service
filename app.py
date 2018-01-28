@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.add_url_rule(
     '/forecast/',
-    view_func=WeatherForecastServiceView.as_view(''),
+    view_func=WeatherForecastServiceView.as_view('weather_forecast'),
     methods=['GET']
 )
 
