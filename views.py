@@ -44,6 +44,9 @@ class WeatherForecastServiceView(View):
         weather_description = parse_response(response_json, max_date)
 
         response_dict = {
-            'description': weather_description
+            'description': 'Прогноз погоды в населенном пункте {0}\n{1}'.format(
+                city,
+                weather_description
+            )
         }
         return jsonify(response_dict)
