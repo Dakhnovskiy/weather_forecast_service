@@ -1,3 +1,4 @@
+import datetime
 from .response_adapter_helper import response_adapter
 
 
@@ -19,17 +20,47 @@ def get_description_weather_by_response_row(response_row):
     )
 
 
-def parse_response(response_data, max_date):
+def parse_response_weather_forecast(response_data, max_date):
     """
-    Парсинг ответа сервиса
+    Парсинг ответа прогноза на несколько дней
     :param response_data: ответ сервиса (словарь)
     :param max_date: дата до которой необходимо отфильтровать данные
     :return: описание погоды
     """
-    response_not_found_msg = 'К сожалению, по вашему запросу данных не найдено'
 
     weather_description_list = []
     for row in response_adapter(response_data, max_date):
         weather_description_list.append(get_description_weather_by_response_row(row))
 
-    return '\n\n'.join(weather_description_list) or response_not_found_msg
+    return '\n\n'.join(weather_description_list)
+
+
+def parse_response_weather_current(response_data):
+    """
+    Парсинг ответа прогноза на один день
+    :param response_data: ответ сервиса (словарь)
+    :return: описание погоды
+    """
+    if 'main' in response_data:
+        response_data['dt_txt'] = 'Сегодня'
+        return get_description_weather_by_response_row(response_data)
+
+
+def parse_response(response_data, count_days_for_forecast):
+    """
+    Парсинг ответа прогноза
+    :param response_data: ответ сервиса (словарь)
+    :param count_days_for_forecast: количество дней, за которое необходим прогноз или None
+    :return: описание погоды
+    """
+    response_not_found_msg = 'К сожалению, по вашему запросу данных не найдено'
+    max_count_days_for_forecast = 5
+
+    if count_days_for_forecast:
+        count_days = min(max_count_days_for_forecast, count_days_for_forecast)
+        max_date = datetime.datetime.today() + datetime.timedelta(days=count_days)
+        weather_description = parse_response_weather_forecast(response_data, max_date)
+    else:
+        weather_description = parse_response_weather_current(response_data)
+
+    return weather_description or response_not_found_msg
